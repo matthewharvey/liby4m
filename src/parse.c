@@ -9,12 +9,13 @@ static int read_intro(FILE* file);
 static int read_constant_string(FILE* file, char* expected_string);
 static int read_param(FILE* file, y4mFile_t* y4mfile);
 static int read_params(FILE* file, y4mFile_t* y4mfile);
+static int read_frame_header_string(FILE* file);
 
 /*
 * function to populate all information about the 'file'
 * and into the 'y4mfile'.
 */
-int parse(FILE* file, y4mFile_t* y4mfile)
+int parse_y4m_header(FILE* file, y4mFile_t* y4mfile)
 {
     assert(y4mfile != NULL);
 
@@ -199,7 +200,7 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
     }
 }
 
-static int read_frame_header(FILE* file)
+static int read_frame_header_string(FILE* file)
 {
     int retval = read_constant_string(file, "FRAME");
     if (retval != 0)
@@ -208,8 +209,8 @@ static int read_frame_header(FILE* file)
 }
 
 //TODO
-int nextFrame(char* data, unsigned int data_len, FILE* file, y4mFile_t* y4mfile)
+int parse_frame_header(char* data, unsigned int data_len, FILE* file, y4mFile_t* y4mfile)
 {
-    read_frame_header(file);
+    read_frame_header_string(file);
     return 0;
 }

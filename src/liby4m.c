@@ -19,7 +19,7 @@ int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
 {
     memset(y4mfile, 0, sizeof(*y4mfile));
     y4mfile->file_ptr = fopen(name, "r");
-    return parse(y4mfile->file_ptr, y4mfile);
+    return parse_y4m_header(y4mfile->file_ptr, y4mfile);
 }
 
 char y4mGetY(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord) { return 0; }
