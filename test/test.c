@@ -28,6 +28,7 @@ int main(int argc, char** argv)
             file.aspectratio_num, file.aspectratio_den,
             file.colour_space,
             file.comment);
+    y4mNextFrame(&file);
     /*char** buffer = malloc(sizeof(char*) * file.width);
     for (int j = 0; j < file.width; ++j)
     {

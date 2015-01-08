@@ -209,8 +209,19 @@ static int read_frame_header_string(FILE* file)
 }
 
 //TODO
-int parse_frame_header(char* data, unsigned int data_len, FILE* file, y4mFile_t* y4mfile)
+int parse_frame_header(FILE* file, y4mFile_t* y4mfile)
 {
     read_frame_header_string(file);
-    return 0;
+    int err = 0;
+    do
+    {
+        err = read_param(file, y4mfile);
+    } while (err == 0);
+    //10 is a special number that means the parameter
+    //list is complete, and the rest of the file is
+    //ready to start reading from the first frame.
+    if (err == 10)
+        return 0;
+    else
+        return err;
 }

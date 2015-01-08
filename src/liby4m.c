@@ -26,7 +26,12 @@ char y4mGetY(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoo
 char y4mGetU(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord) { return 0; }
 char y4mGetV(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord) { return 0; }
 
-int y4mNextFrame(y4mFile_t* file) { return 0; }
+int y4mNextFrame(y4mFile_t* y4mfile)
+{
+    parse_frame_header(y4mfile->file_ptr, y4mfile);
+    //file will now be pointing at some frame data
+    return 0;
+}
 
 /*!
 * \brief Deinit the y4mFile_t structure
