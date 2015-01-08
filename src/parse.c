@@ -212,6 +212,7 @@ static int read_frame_header_string(FILE* file)
 int parse_frame_header(FILE* file, y4mFile_t* y4mfile)
 {
     read_frame_header_string(file);
+    //read frame params
     int err = 0;
     do
     {
