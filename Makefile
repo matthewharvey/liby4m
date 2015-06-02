@@ -13,4 +13,4 @@ bin/liby4m.o: src/liby4m.c include/liby4m.h
 	gcc $(CFLAGS) -c -o bin/liby4m.o src/liby4m.c
 
 clean:
-	rm bin/*
+	rm -f bin/*
