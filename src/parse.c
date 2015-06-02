@@ -89,7 +89,7 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
         return 10;
     else
     {
-        fprintf(stderr, "liby4m: unkown separator %c, expected a space\n", space);
+        fprintf(stderr, "liby4m: unknown separator %c, expected a space\n", space);
         return -1;
     }
 
