@@ -54,11 +54,19 @@ static int read_constant_string(FILE* file, char* expected_string)
 {
     unsigned int expected_length = strlen(expected_string);
     char* intro = malloc(sizeof(char) * (expected_length + 1)); //+1 for null character
-    fread(intro, 1, expected_length, file);
-    intro[expected_length] = '\0';
-    int retval = strcmp(intro, expected_string);
-    if (retval != 0)
-        fprintf(stderr, "liby4m: Constant string is %s instead of %s\n", intro, expected_string);
+    int retval = fread(intro, 1, expected_length, file);
+    if (retval == expected_length)
+    {
+        intro[expected_length] = '\0';
+        retval = strcmp(intro, expected_string);
+        if (retval != 0)
+            fprintf(stderr, "liby4m: Constant string is %s instead of %s\n", intro, expected_string);
+    }
+    else if (feof(file))
+    {
+        //if the end of file has been reached, don't emit an error message
+        retval = -1024; //Not a number of significance
+    }
     free(intro);
     return retval;
 }
@@ -215,8 +223,16 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
 static int read_frame_header_string(FILE* file)
 {
     int retval = read_constant_string(file, "FRAME");
-    if (retval != 0)
+    if ((retval != 0) && (feof(file)))
+    {
+        //If we have reached the end of the file, then don't
+        //emit an error message
+        retval = -1024;//Not a number of significance
+    }
+    else if (retval != 0)
+    {
         fprintf(stderr, "liby4m: frame data is not prefixed by 'FRAME'\n");
+    }
     return retval;
 }
 
