@@ -154,15 +154,25 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
             retval = -3;
         }
         if (0 == strcmp(colourspace_string, "420jpeg"))
+        {
             y4mfile->colour_space = COLOUR_C420JPEG;
+        }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
+        {
             y4mfile->colour_space = COLOUR_C420PALDV;
+        }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
+        {
             y4mfile->colour_space = COLOUR_C420;
+        }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
+        {
             y4mfile->colour_space = COLOUR_C422;
+        }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
+        {
             y4mfile->colour_space = COLOUR_C444;
+        }
         else
         {
             fprintf(stderr, "liby4m: Unrecognized colourspace %s\n", colourspace_string);
@@ -218,6 +228,7 @@ int parse_frame_header(FILE* file, y4mFile_t* y4mfile)
     {
         err = read_param(file, y4mfile);
     } while (err == 0);
+    set_y4m_params_by_colourspace(y4mfile);
     //10 is a special number that means the parameter
     //list is complete, and the rest of the file is
     //ready to start reading from the first frame.
@@ -225,4 +236,31 @@ int parse_frame_header(FILE* file, y4mFile_t* y4mfile)
         return 0;
     else
         return err;
+}
+
+void set_y4m_params_by_colourspace(y4mFile_t* y4mfile)
+{
+    //This is true for all colourspaces
+    y4mfile->yplane_size = y4mfile->width * y4mfile->height;
+    switch (y4mfile->colourspace)
+    {
+    case COLOUR_C420JPEG:
+    case COLOUR_C420PALDV:
+    case COLOUR_C420:
+        y4mfile->chromaplanes_size = (y4mfile->width * y4mfile->height) / 4;
+        break;
+    case COLOUR_C422:
+        y4mfile->chromaplanes_size = (y4mfile->width * y4mfile->height) / 2;
+        break;
+    case COLOUR_C444:
+        y4mfile->chromaplanes_size = (y4mfile->width * y4mfile->height);
+        break;
+    case default:
+        fprintf(stderr, "liby4m: Invalid colourspace in struct\n");
+        //instead of killing the program here, we are just going to
+        //select a default and continue. The default was so chosen
+        //because that's the colour space of my test files.
+        y4mfile->colourspace = COLOUR_C420JPEG;
+        break;
+    }
 }
