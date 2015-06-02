@@ -1,4 +1,5 @@
 *.o
 *.so
 *.swp
-test
+*.y4m
+test/test
