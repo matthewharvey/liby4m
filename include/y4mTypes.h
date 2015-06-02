@@ -29,6 +29,14 @@ enum colour_spaces
     COLOUR_C444
 };
 
+typedef struct framedata framedata_t;
+
+struct framedata
+{
+    char* data;
+    framedata_t* next;
+};
+
 typedef struct
 {
     FILE* file_ptr;
@@ -43,7 +51,8 @@ typedef struct
     unsigned int yplane_size;
     unsigned int chromaplanes_size;
     unsigned int eof; //indicates that there are no more frames to read
-    char* current_frame_data; //must be free'd upon deletion
+    framedata_t* first_frame_data; //functionally the 'head' pointer to the linked list
+    framedata_t* current_frame_data; //functionally the 'tail' pointer to the linked list
     char* comment; //must be free'd upon deletion
 } y4mFile_t;
 

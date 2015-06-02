@@ -214,6 +214,7 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
 static int read_frame_header_string(FILE* file)
 {
     int retval = read_constant_string(file, "FRAME");
+    //TODO:Add detection of last frame here
     if (retval != 0)
         fprintf(stderr, "liby4m: frame data is not prefixed by 'FRAME'\n");
     return retval;
@@ -270,17 +271,33 @@ int load_frame_data(FILE* file, y4mFile_t* y4mfile)
 {
     size_t read_size;
     unsigned int size_of_frame = y4mfile->yplane_size + 2*y4mfile->chromaplanes_size;
-    y4mfile->current_frame_data = (char*)malloc(size_of_frame*sizeof(char));
-    if (y4mfile->current_frame_data == NULL)
+    char* new_frame_data = (char*)malloc(size_of_frame*sizeof(char));
+    if (new_frame_data == NULL)
     {
         fprintf(stderr, "liby4m: Failed to allocate memory\n");
         return -1;
     }
-    read_size = fread(y4mfile->current_frame_data, sizeof(char), size_of_frame, file);
+    read_size = fread(new_frame_data, sizeof(char), size_of_frame, file);
     if (read_size != size_of_frame)
     {
         fprintf(stderr, "liby4m: Failed to read frame data\n");
         return -2;
     }
+    y4mfile->current_frame_data->next = (framedata_t*)malloc(1*sizeof(framedata_t));
+    y4mfile->current_frame_data = y4mfile->current_frame_data->next;
+    y4mfile->current_frame_data->data = new_frame_data;
+    y4mfile->current_frame_data->next = NULL;
     return 0;
+}
+
+void free_frame_data(y4mFile_t* y4mfile)
+{
+    framedata_t* cur = y4mfile->first_frame_data;
+    while(cur != NULL)
+    {
+        framedata_t* to_delete = cur;
+        free(cur->data);
+        cur = cur->next;
+        free(to_delete);
+    }
 }

@@ -52,7 +52,6 @@ int y4mNextFrame(y4mFile_t* y4mfile)
 {
     parse_frame_header(y4mfile->file_ptr, y4mfile);
     //file will now be pointing at some frame data
-    free(y4mfile->current_frame_data);
     load_frame_data(y4mfile->file_ptr, y4mfile);
     return 0;
 }
@@ -70,7 +69,7 @@ int y4mNextFrame(y4mFile_t* y4mfile)
 */
 char* y4mGetFrameDataPointer(y4mFile_t* y4mfile)
 {
-    return y4mfile->current_frame_data;
+    return y4mfile->current_frame_data->data;
 }
 
 /*!
@@ -81,7 +80,7 @@ char* y4mGetFrameDataPointer(y4mFile_t* y4mfile)
 void y4mCloseFile(y4mFile_t* y4mfile)
 {
     fclose(y4mfile->file_ptr);
-    free(y4mfile->current_frame_data);
+    free_frame_data(y4mfile);
     if (y4mfile->comment != NULL)
         free(y4mfile->comment);
 }
