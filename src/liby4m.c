@@ -58,6 +58,22 @@ int y4mNextFrame(y4mFile_t* y4mfile)
 }
 
 /*!
+* \brief Get a pointer to the data for the current frame
+*
+* \param y4mfile The struct for which to get the frame data
+*
+* Returns a pointer to the raw frame data that was read directly
+* from the Y4M file. It is the responsibility of the application
+* to interpret the format of this data and act upon it accordingly.
+* Modifications to this data will be reflected in the struct,
+* and will be seen in the file on disk if y4mWriteToDisk is called.
+*/
+char* y4mGetFrameDataPointer(y4mFile_t* y4mfile)
+{
+    return y4mfile->current_frame_data;
+}
+
+/*!
 * \brief Deinit the y4mFile_t structure
 *
 * \param y4mfile The struct to be de-initialized. Must have been previously initialized.
@@ -65,6 +81,7 @@ int y4mNextFrame(y4mFile_t* y4mfile)
 void y4mCloseFile(y4mFile_t* y4mfile)
 {
     fclose(y4mfile->file_ptr);
+    free(y4mfile->current_frame_data);
     if (y4mfile->comment != NULL)
         free(y4mfile->comment);
 }

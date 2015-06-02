@@ -11,6 +11,8 @@ char y4mGetV(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoo
 
 int y4mNextFrame(y4mFile_t* file);
 
+char* y4mGetFrameDataPointer(y4mFile_t* y4mfile);
+
 void y4mCloseFile(y4mFile_t* file);
 
 #endif //include guard

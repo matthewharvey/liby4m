@@ -42,7 +42,8 @@ typedef struct
     enum colour_spaces colourspace;
     unsigned int yplane_size;
     unsigned int chromaplanes_size;
-    char* current_frame_data;
+    unsigned int eof; //indicates that there are no more frames to read
+    char* current_frame_data; //must be free'd upon deletion
     char* comment; //must be free'd upon deletion
 } y4mFile_t;
 
