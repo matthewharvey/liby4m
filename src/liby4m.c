@@ -20,6 +20,8 @@ int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
     int err;
     memset(y4mfile, 0, sizeof(*y4mfile));
     y4mfile->file_ptr = fopen(name, "r");
+    y4mfile->current_frame_data = (framedata_t*)malloc(sizeof(framedata_t)*1);
+    y4mfile->first_frame_data = y4mfile->current_frame_data;
     err = parse_y4m_header(y4mfile->file_ptr, y4mfile);
     if (0 == err)
     {
