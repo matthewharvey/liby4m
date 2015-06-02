@@ -52,10 +52,19 @@ char y4mGetV(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoo
 
 int y4mNextFrame(y4mFile_t* y4mfile)
 {
-    parse_frame_header(y4mfile->file_ptr, y4mfile);
-    //file will now be pointing at some frame data
-    load_frame_data(y4mfile->file_ptr, y4mfile);
-    return 0;
+    int err;
+    err = parse_frame_header(y4mfile->file_ptr, y4mfile);
+    if (0 == err)
+    {
+        //file will now be pointing at some frame data
+        err = load_frame_data(y4mfile->file_ptr, y4mfile);
+        return err;
+    }
+    else
+    {
+        y4mfile->eof = 1;
+        return 0;
+    }
 }
 
 /*!
