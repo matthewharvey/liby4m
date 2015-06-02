@@ -52,9 +52,10 @@ static int read_intro(FILE* file)
 */
 static int read_constant_string(FILE* file, char* expected_string)
 {
-    char* intro = malloc(sizeof(char) * (strlen(expected_string) + 1));
-    fread(intro, 1, strlen(expected_string), file);
-    intro[(strlen(expected_string))] = '\0';
+    unsigned int expected_length = strlen(expected_string);
+    char* intro = malloc(sizeof(char) * (expected_length + 1)); //+1 for null character
+    fread(intro, 1, expected_length, file);
+    intro[expected_length] = '\0';
     int retval = strcmp(intro, expected_string);
     if (retval != 0)
         fprintf(stderr, "liby4m: Constant string is %s instead of %s\n", intro, expected_string);
