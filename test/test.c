@@ -28,5 +28,10 @@ int main(int argc, char** argv)
             file.aspectratio_num, file.aspectratio_den,
             file.colourspace,
             file.comment);
+    while(file.eof == 0)
+    {
+        y4mGetFrameDataPointer(&file);
+        y4mNextFrame(&file);
+    }
     y4mCloseFile(&file);
 }
