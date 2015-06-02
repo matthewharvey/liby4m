@@ -214,7 +214,6 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
 static int read_frame_header_string(FILE* file)
 {
     int retval = read_constant_string(file, "FRAME");
-    //TODO:Add detection of last frame here
     if (retval != 0)
         fprintf(stderr, "liby4m: frame data is not prefixed by 'FRAME'\n");
     return retval;
@@ -223,13 +222,13 @@ static int read_frame_header_string(FILE* file)
 //TODO
 int parse_frame_header(FILE* file, y4mFile_t* y4mfile)
 {
-    read_frame_header_string(file);
-    //read frame params
     int err = 0;
-    do
+    err = read_frame_header_string(file);
+    //read frame params
+    while (err == 0)
     {
         err = read_param(file, y4mfile);
-    } while (err == 0);
+    }
     set_y4m_params_by_colourspace(y4mfile);
     //10 is a special number that means the parameter
     //list is complete, and the rest of the file is
