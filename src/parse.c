@@ -33,6 +33,7 @@ int parse_y4m_header(FILE* file, y4mFile_t* y4mfile)
     }
     else
     {
+        fprintf(stderr, "liby4m: Malformed y4m file\n");
         return -1;
     }
 }
