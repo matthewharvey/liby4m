@@ -39,7 +39,10 @@ typedef struct
     enum interlacing_modes interlacing_mode;
     unsigned int aspectratio_num;
     unsigned int aspectratio_den;
-    enum colour_spaces colour_space;
+    enum colour_spaces colourspace;
+    unsigned int yplane_size;
+    unsigned int chromaplanes_size;
+    char* current_frame_data;
     char* comment; //must be free'd upon deletion
 } y4mFile_t;
 

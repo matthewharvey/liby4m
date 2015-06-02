@@ -156,23 +156,23 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
         }
         if (0 == strcmp(colourspace_string, "420jpeg"))
         {
-            y4mfile->colour_space = COLOUR_C420JPEG;
+            y4mfile->colourspace = COLOUR_C420JPEG;
         }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
         {
-            y4mfile->colour_space = COLOUR_C420PALDV;
+            y4mfile->colourspace = COLOUR_C420PALDV;
         }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
         {
-            y4mfile->colour_space = COLOUR_C420;
+            y4mfile->colourspace = COLOUR_C420;
         }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
         {
-            y4mfile->colour_space = COLOUR_C422;
+            y4mfile->colourspace = COLOUR_C422;
         }
         else if (0 == strcmp(colourspace_string, "420jpeg"))
         {
-            y4mfile->colour_space = COLOUR_C444;
+            y4mfile->colourspace = COLOUR_C444;
         }
         else
         {
@@ -256,7 +256,7 @@ void set_y4m_params_by_colourspace(y4mFile_t* y4mfile)
     case COLOUR_C444:
         y4mfile->chromaplanes_size = (y4mfile->width * y4mfile->height);
         break;
-    case default:
+    default:
         fprintf(stderr, "liby4m: Invalid colourspace in struct\n");
         //instead of killing the program here, we are just going to
         //select a default and continue. The default was so chosen
@@ -264,4 +264,23 @@ void set_y4m_params_by_colourspace(y4mFile_t* y4mfile)
         y4mfile->colourspace = COLOUR_C420JPEG;
         break;
     }
+}
+
+int load_frame_data(FILE* file, y4mFile_t* y4mfile)
+{
+    size_t read_size;
+    unsigned int size_of_frame = y4mfile->yplane_size + 2*y4mfile->chromaplanes_size;
+    y4mfile->current_frame_data = (char*)malloc(size_of_frame*sizeof(char));
+    if (y4mfile->current_frame_data == NULL)
+    {
+        fprintf(stderr, "liby4m: Failed to allocate memory\n");
+        return -1;
+    }
+    read_size = fread(y4mfile->current_frame_data, sizeof(char), size_of_frame, file);
+    if (read_size != size_of_frame)
+    {
+        fprintf(stderr, "liby4m: Failed to read frame data\n");
+        return -2;
+    }
+    return 0;
 }

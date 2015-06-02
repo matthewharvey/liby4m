@@ -17,9 +17,31 @@
 */
 int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
 {
+    int err;
     memset(y4mfile, 0, sizeof(*y4mfile));
     y4mfile->file_ptr = fopen(name, "r");
-    return parse_y4m_header(y4mfile->file_ptr, y4mfile);
+    err = parse_y4m_header(y4mfile->file_ptr, y4mfile);
+    if (0 == err)
+    {
+        err = parse_frame_header(y4mfile->file_ptr, y4mfile);
+        if (0 == err)
+        {
+            err = load_frame_data(y4mfile->file_ptr, y4mfile);
+            if (0 != err)
+            {
+                fprintf(stderr, "liby4m: Failed to load frame data\n");
+            }
+        }
+        else
+        {
+            fprintf(stderr, "liby4m: Failed to parse frame header\n");
+        }
+    }
+    else
+    {
+        fprintf(stderr, "liby4m: Failed to parse file header\n");
+    }
+    return err;
 }
 
 char y4mGetY(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord) { return 0; }
@@ -30,6 +52,8 @@ int y4mNextFrame(y4mFile_t* y4mfile)
 {
     parse_frame_header(y4mfile->file_ptr, y4mfile);
     //file will now be pointing at some frame data
+    free(y4mfile->current_frame_data);
+    load_frame_data(y4mfile->file_ptr, y4mfile);
     return 0;
 }
 

@@ -26,7 +26,7 @@ int main(int argc, char** argv)
             file.framerate_num, file.framerate_den,
             file.interlacing_mode,
             file.aspectratio_num, file.aspectratio_den,
-            file.colour_space,
+            file.colourspace,
             file.comment);
     y4mNextFrame(&file);
     /*char** buffer = malloc(sizeof(char*) * file.width);
