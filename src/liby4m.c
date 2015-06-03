@@ -106,6 +106,32 @@ int y4mWriteToFile(y4mFile_t* y4mfile, char* filename)
 }
 
 /*!
+* \brief Return the width of the file
+*/
+unsigned int y4mGetWidth(y4mFile_t* y4mfile)
+{
+    return y4mfile->width;
+}
+
+/*!
+* \brief Return the height of the file
+*/
+unsigned int y4mGetHeight(y4mFile_t* y4mfile)
+{
+    return y4mfile->height;
+}
+/*!
+*   \brief Return whether the final frame has been read
+*
+*   This probably only returns true once the final frame
+*   has been read, and y4mNextFrame has been called once more.
+*/
+int y4mIsEndOfFile(y4mFile_t* y4mfile)
+{
+    return (y4mfile->eof != 0);
+}
+
+/*!
 * \brief Deinit the y4mFile_t structure
 *
 * \param y4mfile The struct to be de-initialized. Must have been previously initialized.

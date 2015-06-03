@@ -13,6 +13,9 @@ int y4mNextFrame(y4mFile_t* file);
 int y4mWriteToFile(y4mFile_t* file, char* filename);
 
 char* y4mGetFrameDataPointer(y4mFile_t* y4mfile);
+unsigned int y4mGetWidth(y4mFile_t* y4mfile);
+unsigned int y4mGetHeight(y4mFile_t* y4mfile);
+int y4mIsEndOfFile(y4mFile_t* y4mfile);
 
 void y4mCloseFile(y4mFile_t* file);
 

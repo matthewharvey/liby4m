@@ -15,7 +15,7 @@ enum operations
 
 void change_data(char* frame_data, y4mFile_t* y4mfile, int operation)
 {
-    int yplane_bytes = y4mfile->width * y4mfile->height;
+    int yplane_bytes = y4mGetWidth(y4mfile) * y4mGetHeight(y4mfile);
     for (int i = 0; i < yplane_bytes; ++i)
     {
         switch (operation)
@@ -48,15 +48,15 @@ int main(int argc, char** argv)
             "colour space: %d\n"
             "comment: %s\n",
             filename,
-            file.width,
-            file.height,
+            y4mGetWidth(&file),
+            y4mGetHeight(&file),
             file.framerate_num, file.framerate_den,
             file.interlacing_mode,
             file.aspectratio_num, file.aspectratio_den,
             file.colourspace,
             file.comment);
     //int op = 0;
-    while(file.eof == 0)
+    while(y4mIsEndOfFile(&file) == 0)
     {
         char* data_ptr = y4mGetFrameDataPointer(&file);
         /*if (op)
