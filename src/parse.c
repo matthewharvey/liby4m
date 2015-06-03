@@ -10,6 +10,9 @@ static int read_constant_string(FILE* file, char* expected_string);
 static int read_param(FILE* file, y4mFile_t* y4mfile);
 static int read_params(FILE* file, y4mFile_t* y4mfile);
 static int read_frame_header_string(FILE* file);
+static int write_header_line(FILE* new_file, y4mFile_t* y4mfile);
+static int write_frame_line(FILE* new_file, y4mFile_t* y4mfile);
+static int write_frame_data(FILE* new_file, framedata_t* cur, unsigned long datasize);
 
 /*
 * function to populate all information about the 'file'
@@ -299,11 +302,103 @@ int load_frame_data(FILE* file, y4mFile_t* y4mfile)
         fprintf(stderr, "liby4m: Failed to read frame data\n");
         return -2;
     }
-    y4mfile->current_frame_data->next = (framedata_t*)malloc(1*sizeof(framedata_t));
-    y4mfile->current_frame_data = y4mfile->current_frame_data->next;
-    y4mfile->current_frame_data->data = new_frame_data;
-    y4mfile->current_frame_data->next = NULL;
+    if (y4mfile->current_frame_data->data == NULL) //if this is the first insertion
+    {
+        y4mfile->current_frame_data->data = new_frame_data;
+    }
+    else
+    {
+        y4mfile->current_frame_data->next = (framedata_t*)malloc(1*sizeof(framedata_t));
+        y4mfile->current_frame_data = y4mfile->current_frame_data->next;
+        y4mfile->current_frame_data->data = new_frame_data;
+        y4mfile->current_frame_data->next = NULL;
+    }
     return 0;
+}
+
+int write_y4mfile_from_y4mfile_struct(y4mFile_t* y4mfile, char* filename)
+{
+    FILE* new_file = fopen(filename, "w");
+    int err = write_header_line(new_file, y4mfile);
+    framedata_t* cur = y4mfile->first_frame_data;
+    while (cur != NULL)
+    {
+        err |= write_frame_line(new_file, y4mfile);
+        err |= write_frame_data(new_file, cur, y4mfile->yplane_size + 2* y4mfile->chromaplanes_size);
+        cur = cur->next;
+    }
+    return err;
+}
+
+static int write_header_line(FILE* new_file, y4mFile_t* y4mfile)
+{
+    char message[] = "YUV4MPEG2";
+    int retval = fwrite(message, 1, strlen(message), new_file);
+    if (retval == strlen(message))
+    {
+        const int buf_size = 20;
+        char param[buf_size]; //20 is way more than necessary
+        char* param_ptr = &param[0];
+        char* colourspace_string;
+        snprintf(param_ptr, buf_size, " %c%d", PARAM_WIDTH, y4mfile->width);
+        fwrite(param_ptr, 1, strlen(param), new_file);
+        snprintf(param_ptr, buf_size, " %c%d", PARAM_HEIGHT, y4mfile->height);
+        fwrite(param_ptr, 1, strlen(param), new_file);
+        snprintf(param_ptr, buf_size, " %c%d:%d", PARAM_FRAMERATE, y4mfile->framerate_num, y4mfile->framerate_den);
+        fwrite(param_ptr, 1, strlen(param), new_file);
+        snprintf(param_ptr, buf_size, " %c%c", PARAM_INTERLACING, y4mfile->interlacing_mode);
+        fwrite(param_ptr, 1, strlen(param), new_file);
+        snprintf(param_ptr, buf_size, " %c%d:%d", PARAM_ASPECTRATIO, y4mfile->aspectratio_num, y4mfile->aspectratio_den);
+        fwrite(param_ptr, 1, strlen(param), new_file);
+        switch (y4mfile->colourspace)
+        {
+        case COLOUR_C420JPEG:
+            colourspace_string = "420jpeg";
+            break;
+        case COLOUR_C420PALDV:
+            colourspace_string = "420paldv";
+            break;
+        case COLOUR_C420:
+            colourspace_string = "420";
+            break;
+        case COLOUR_C422:
+            colourspace_string = "422";
+            break;
+        case COLOUR_C444:
+            colourspace_string = "444";
+            break;
+        }
+        snprintf(param_ptr, buf_size, " %c%s", PARAM_COLOURSPACE, colourspace_string);
+        fwrite(param_ptr, 1, strlen(param), new_file);
+        if (y4mfile->comment != NULL)
+        {
+            snprintf(param_ptr, buf_size, " %c%s", PARAM_COMMENT, y4mfile->comment);
+            fwrite(param_ptr, 1, strlen(param), new_file);
+        }
+        snprintf(param_ptr, buf_size, "\n");
+        fwrite(param_ptr, 1, strlen(param), new_file);
+    }
+    else
+        return retval;
+    return 0;
+}
+
+/*
+*   For now this just writes "FRAME\n" into the file
+*   In the future this might need to support options
+*   that change per frame, but now is not that time.
+*/
+static int write_frame_line(FILE* new_file, y4mFile_t* y4mfile)
+{
+    char message[] = "FRAME\n";
+    int retval = fwrite(message, 1, strlen(message), new_file);
+    return (retval != strlen(message));
+}
+
+static int write_frame_data(FILE* new_file, framedata_t* cur, unsigned long datasize)
+{
+    int retval = fwrite(cur->data, 1, datasize, new_file);
+    return (retval != datasize);
 }
 
 void free_frame_data(y4mFile_t* y4mfile)

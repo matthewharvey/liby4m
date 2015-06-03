@@ -10,6 +10,7 @@ char y4mGetU(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoo
 char y4mGetV(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord);
 
 int y4mNextFrame(y4mFile_t* file);
+int y4mWriteToFile(y4mFile_t* file, char* filename);
 
 char* y4mGetFrameDataPointer(y4mFile_t* y4mfile);
 

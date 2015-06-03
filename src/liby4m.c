@@ -21,6 +21,8 @@ int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
     memset(y4mfile, 0, sizeof(*y4mfile));
     y4mfile->file_ptr = fopen(name, "r");
     y4mfile->current_frame_data = (framedata_t*)malloc(sizeof(framedata_t)*1);
+    y4mfile->current_frame_data->next = NULL;
+    y4mfile->current_frame_data->data = NULL;
     y4mfile->first_frame_data = y4mfile->current_frame_data;
     err = parse_y4m_header(y4mfile->file_ptr, y4mfile);
     if (0 == err)
@@ -81,6 +83,26 @@ int y4mNextFrame(y4mFile_t* y4mfile)
 char* y4mGetFrameDataPointer(y4mFile_t* y4mfile)
 {
     return y4mfile->current_frame_data->data;
+}
+
+/*!
+* \brief Take the changes currently made to the data and
+* write them to disk
+*
+* \param y4mfile The struct to write to a file
+* \param filename The name of the new file to write
+*
+* Warning: This function will not preserve the position
+* of the current frame.
+*/
+int y4mWriteToFile(y4mFile_t* y4mfile, char* filename)
+{
+    //This will read all of the frame data into memory
+    while (y4mfile->eof == 0)
+    {
+        y4mNextFrame(y4mfile);
+    }
+    return write_y4mfile_from_y4mfile_struct(y4mfile, filename);
 }
 
 /*!
