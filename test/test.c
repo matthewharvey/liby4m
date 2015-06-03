@@ -33,5 +33,6 @@ int main(int argc, char** argv)
         y4mGetFrameDataPointer(&file);
         y4mNextFrame(&file);
     }
+    y4mWriteToFile(&file, "new.y4m");
     y4mCloseFile(&file);
 }
