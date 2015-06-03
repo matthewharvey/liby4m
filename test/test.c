@@ -50,6 +50,10 @@ int main(int argc, char** argv)
             filename,
             y4mGetWidth(&file),
             y4mGetHeight(&file),
+            //WARNING: Directly accessing the struct like this
+            //isn't a good idea for future proofing. If you
+            //want to access some of these members from a real program then
+            //write an accessor function in src/liby4m.c.
             file.framerate_num, file.framerate_den,
             file.interlacing_mode,
             file.aspectratio_num, file.aspectratio_den,
