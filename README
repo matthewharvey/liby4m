@@ -1,0 +1,28 @@
+liby4m
+
+A library for reading the yuv4mpeg2 file format. I couldn't find one that suited my needs, so I made one.
+
+Goal:
+I found the y4m file format really useful for moving around uncompressed video, seeing
+as it can still be used by other programs without having to memorize
+and specify the dimensions and colour space to each of those programs.
+
+So I created this library with the goal of allowing the easy creation of small
+programs that can use the y4m file format. I was experimenting with OpenCL
+and wanted to process video frames, which was the initial intention.
+
+Using the library:
+Well, the Makefile is probably pretty self-explanatory. Just run it and
+it will create a bin directory with an so file which you can link to.
+I don't have an install target in the makefile. I think the ultimate
+solution to that is to use Cmake to create the Makefile. I started trying
+and then...got kind of bored, so it's just the Makefile for right now.
+
+The test directory:
+There's a test directory that shows potential use of the library.
+It was what I used to test the library during development, so the
+code is necessarily simplistic and has some commented out parts.
+The code sometimes makes direct use of the y4mFile_t structure,
+and ideally code shouldn't be doing that for future proofing.
+If you need access to one of the parameters that doesn't have a
+getter, then write one!
