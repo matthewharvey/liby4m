@@ -39,7 +39,8 @@ int main(int argc, char** argv)
     char* filename = argv[1];
     y4mFile_t file;
     assert(0 == y4mOpenFile(&file, filename));
-    printf( "name: %s\n"
+    fprintf(stderr,
+            "name: %s\n"
             "width:  %u\n"
             "height: %u\n"
             "framerate: %u:%u\n"
@@ -73,5 +74,6 @@ int main(int argc, char** argv)
         y4mNextFrame(&file);
     }
     y4mWriteToFile(&file, "new.y4m");
+    y4mWriteToStdout(&file);
     y4mCloseFile(&file);
 }

@@ -4,6 +4,8 @@
 
 #include "parse.h"
 
+static void fast_forward_to_end(y4mFile_t* y4mfile);
+
 /*!
 * \brief Initialize a y4mFile_t struct by opening the file 'name'
 *
@@ -97,12 +99,24 @@ char* y4mGetFrameDataPointer(y4mFile_t* y4mfile)
 */
 int y4mWriteToFile(y4mFile_t* y4mfile, char* filename)
 {
+    fast_forward_to_end(y4mfile);
+    FILE* new_file = fopen(filename, "w");
+    return write_y4mfile_from_y4mfile_struct(y4mfile, new_file);
+}
+
+int y4mWriteToStdout(y4mFile_t* y4mfile)
+{
+    fast_forward_to_end(y4mfile);
+    return write_y4mfile_from_y4mfile_struct(y4mfile, stdout);
+}
+
+static void fast_forward_to_end(y4mFile_t* y4mfile)
+{
     //This will read all of the frame data into memory
     while (y4mfile->eof == 0)
     {
         y4mNextFrame(y4mfile);
     }
-    return write_y4mfile_from_y4mfile_struct(y4mfile, filename);
 }
 
 /*!

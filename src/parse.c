@@ -316,9 +316,8 @@ int load_frame_data(FILE* file, y4mFile_t* y4mfile)
     return 0;
 }
 
-int write_y4mfile_from_y4mfile_struct(y4mFile_t* y4mfile, char* filename)
+int write_y4mfile_from_y4mfile_struct(y4mFile_t* y4mfile, FILE* new_file)
 {
-    FILE* new_file = fopen(filename, "w");
     int err = write_header_line(new_file, y4mfile);
     framedata_t* cur = y4mfile->first_frame_data;
     while (cur != NULL)
