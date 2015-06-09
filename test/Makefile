@@ -2,7 +2,7 @@
 all: test
 
 test: test.c
-	gcc -o test -g -std=c99 -Wall -Werror -L../bin -I../include -ly4m test.c
+	gcc -o test -g -std=c99 -Wall -Werror -ly4m test.c
 
 clean:
 	rm test

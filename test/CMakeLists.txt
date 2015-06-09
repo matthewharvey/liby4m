@@ -1,0 +1,8 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+PROJECT(liby4m_test C)
+
+ADD_EXECUTABLE(liby4m_test test.c)
+
+FIND_LIBRARY(Y4M_LIBRARY y4m /usr/local/lib)
+TARGET_LINK_LIBRARIES(liby4m_test ${Y4M_LIBRARY})

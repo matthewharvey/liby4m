@@ -1,0 +1,13 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+PROJECT(liby4m C)
+
+#set up a version number
+SET(VERSION_MAJOR 0)
+SET(VERSION_MINOR 1)
+
+OPTION(DEBUG_MODE "Compile with debug options" ON)
+
+INCLUDE_DIRECTORIES("include")
+
+ADD_SUBDIRECTORY(src bin)
+ADD_SUBDIRECTORY(include)
