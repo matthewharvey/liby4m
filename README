@@ -12,11 +12,12 @@ programs that can use the y4m file format. I was experimenting with OpenCL
 and wanted to process video frames, which was the initial intention.
 
 Using the library:
-Well, the Makefile is probably pretty self-explanatory. Just run it and
-it will create a bin directory with an so file which you can link to.
-I don't have an install target in the makefile. I think the ultimate
-solution to that is to use Cmake to create the Makefile. I started trying
-and then...got kind of bored, so it's just the Makefile for right now.
+Standard cmake usage:
+mkdir Build
+cd Build
+cmake ..
+make
+make install #this will install to the cmake prefix
 
 The test directory:
 There's a test directory that shows potential use of the library.
@@ -26,3 +27,5 @@ The code sometimes makes direct use of the y4mFile_t structure,
 and ideally code shouldn't be doing that for future proofing.
 If you need access to one of the parameters that doesn't have a
 getter, then write one!
+Also, the test folder is more of a development testbed as opposed
+to a formal test suite, which I should also look into creating.

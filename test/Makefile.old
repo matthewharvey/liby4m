@@ -1,0 +1,11 @@
+#WARNING: These makefiles have been replaced by a cmake build system
+#These probably won't be updated as the project continues
+#and will eventually be removed
+.PHONY: all clean
+all: test
+
+test: test.c
+	gcc -o test -g -std=c99 -Wall -Werror -ly4m test.c
+
+clean:
+	rm test
