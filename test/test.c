@@ -39,8 +39,9 @@ enum operations
 
 void change_data(char* frame_data, y4mFile_t* y4mfile, int operation)
 {
+    int i;
     int yplane_bytes = y4mGetWidth(y4mfile) * y4mGetHeight(y4mfile);
-    for (int i = 0; i < yplane_bytes; ++i)
+    for (i = 0; i < yplane_bytes; ++i)
     {
         switch (operation)
         {
@@ -98,6 +99,6 @@ int main(int argc, char** argv)
         y4mNextFrame(&file);
     }
     y4mWriteToFile(&file, "new.y4m");
-    y4mWriteToStdout(&file);
+    //y4mWriteToStdout(&file);
     y4mCloseFile(&file);
 }
