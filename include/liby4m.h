@@ -28,6 +28,7 @@
 #include "y4mTypes.h"
 
 int y4mOpenFile(y4mFile_t* file, const char* name);
+int y4mOpenFp(y4mFile_t* y4mfile, FILE* fp);
 
 char y4mGetY(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord);
 char y4mGetU(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord);
@@ -35,6 +36,7 @@ char y4mGetV(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoo
 
 int y4mNextFrame(y4mFile_t* file);
 int y4mWriteToFile(y4mFile_t* file, char* filename);
+int y4mWriteToFp(y4mFile_t* file, FILE* fp);
 int y4mWriteToStdout(y4mFile_t* file);
 
 char* y4mGetFrameDataPointer(y4mFile_t* y4mfile);
