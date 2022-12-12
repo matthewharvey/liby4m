@@ -1,0 +1,7 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+
+Name: liby4m
+Description: liby4m read/write library
+Version: 0.1
+Libs: -ly4m @LIBS@
