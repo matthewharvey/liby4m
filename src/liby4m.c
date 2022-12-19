@@ -31,21 +31,21 @@
 static void fast_forward_to_end(y4mFile_t* y4mfile);
 
 /*!
-* \brief Initialize a y4mFile_t struct by opening the file 'name'
+* \brief Initialize a y4mFile_t struct by reading the FILE* 'fp'
 *
 * \param y4mfile: structure to be initialized.
-* \param name: name of the file to be opened.
+* \param fp: file pointer to the file to be read.
 *
-* Opens the file in question and reads the header information
-* to extract information which is available in the struct's members
+* Reads the header information from `fp` to extract information which is
+* available in the struct's members
 *
 * \return 0 if successful. Otherwise failure.
 */
-int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
+int y4mOpenFp(y4mFile_t* y4mfile, FILE* fp)
 {
     int err;
     memset(y4mfile, 0, sizeof(*y4mfile));
-    y4mfile->file_ptr = fopen(name, "r");
+    y4mfile->file_ptr = fp;
     y4mfile->current_frame_data = (framedata_t*)malloc(sizeof(framedata_t)*1);
     y4mfile->current_frame_data->next = NULL;
     y4mfile->current_frame_data->data = NULL;
@@ -72,6 +72,23 @@ int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
         fprintf(stderr, "liby4m: Failed to parse file header\n");
     }
     return err;
+}
+
+/*!
+* \brief Initialize a y4mFile_t struct by opening the file 'name'
+*
+* \param y4mfile: structure to be initialized.
+* \param name: name of the file to be opened.
+*
+* Opens the file in question and reads the header information
+* to extract information which is available in the struct's members
+*
+* \return 0 if successful. Otherwise failure.
+*/
+int y4mOpenFile(y4mFile_t* y4mfile, const char* name)
+{
+    FILE* fp = fopen(name, "r");
+    return y4mOpenFp(y4mfile, fp);
 }
 
 char y4mGetY(y4mFile_t* file, const unsigned int xCoord, const unsigned int yCoord) { return 0; }
@@ -128,10 +145,15 @@ int y4mWriteToFile(y4mFile_t* y4mfile, char* filename)
     return write_y4mfile_from_y4mfile_struct(y4mfile, new_file);
 }
 
-int y4mWriteToStdout(y4mFile_t* y4mfile)
+int y4mWriteToFp(y4mFile_t* y4mfile, FILE* fp)
 {
     fast_forward_to_end(y4mfile);
-    return write_y4mfile_from_y4mfile_struct(y4mfile, stdout);
+    return write_y4mfile_from_y4mfile_struct(y4mfile, fp);
+}
+
+int y4mWriteToStdout(y4mFile_t* y4mfile)
+{
+    return y4mWriteToFp(y4mfile, stdout);
 }
 
 static void fast_forward_to_end(y4mFile_t* y4mfile)
