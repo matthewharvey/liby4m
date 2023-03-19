@@ -181,6 +181,13 @@ unsigned int y4mGetHeight(y4mFile_t* y4mfile)
     return y4mfile->height;
 }
 /*!
+* \brief Return the color space of the file
+*/
+enum colour_spaces y4mGetColourSpace(y4mFile_t* y4mfile)
+{
+    return y4mfile->colourspace;
+}
+/*!
 *   \brief Return whether the final frame has been read
 *
 *   This probably only returns true once the final frame
