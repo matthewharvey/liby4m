@@ -1,7 +1,10 @@
 prefix=@CMAKE_INSTALL_PREFIX@
-libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+exec_prefix="${prefix}"
+libdir="${prefix}/lib"
+includedir="${prefix}/include"
 
 Name: liby4m
 Description: liby4m read/write library
-Version: 0.1
-Libs: -ly4m @LIBS@
+Version: @PROJECT_VERSION@
+Libs: -L"${libdir}" -ly4m
+Cflags: -I"${includedir}"
