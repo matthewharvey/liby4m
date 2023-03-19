@@ -194,19 +194,19 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
         {
             y4mfile->colourspace = COLOUR_C420JPEG;
         }
-        else if (0 == strcmp(colourspace_string, "420jpeg"))
+        else if (0 == strcmp(colourspace_string, "420paldv"))
         {
             y4mfile->colourspace = COLOUR_C420PALDV;
         }
-        else if (0 == strcmp(colourspace_string, "420jpeg"))
+        else if (0 == strcmp(colourspace_string, "420"))
         {
             y4mfile->colourspace = COLOUR_C420;
         }
-        else if (0 == strcmp(colourspace_string, "420jpeg"))
+        else if (0 == strcmp(colourspace_string, "422"))
         {
             y4mfile->colourspace = COLOUR_C422;
         }
-        else if (0 == strcmp(colourspace_string, "420jpeg"))
+        else if (0 == strcmp(colourspace_string, "444"))
         {
             y4mfile->colourspace = COLOUR_C444;
         }
