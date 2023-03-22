@@ -233,6 +233,9 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
         {
             char* comment_string = malloc(sizeof(char) * (strlen(tmp_string) + 1));
             strcpy(comment_string, tmp_string);
+            // do not leak memory with 2+ comments
+            if (y4mfile->comment != NULL)
+                free(y4mfile->comment);
             y4mfile->comment = comment_string;
         }
         return retval;
