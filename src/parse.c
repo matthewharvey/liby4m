@@ -194,6 +194,10 @@ static int read_param(FILE* file, y4mFile_t* y4mfile)
         {
             y4mfile->colourspace = COLOUR_C420JPEG;
         }
+        else if (0 == strcmp(colourspace_string, "420mpeg2"))
+        {
+            y4mfile->colourspace = COLOUR_C420MPEG2;
+        }
         else if (0 == strcmp(colourspace_string, "420paldv"))
         {
             y4mfile->colourspace = COLOUR_C420PALDV;
@@ -293,6 +297,7 @@ void set_y4m_params_by_colourspace(y4mFile_t* y4mfile)
     switch (y4mfile->colourspace)
     {
     case COLOUR_C420JPEG:
+    case COLOUR_C420MPEG2:
     case COLOUR_C420PALDV:
     case COLOUR_C420:
         y4mfile->chromaplanes_size = (y4mfile->width * y4mfile->height) / 4;
@@ -380,6 +385,9 @@ static int write_header_line(FILE* new_file, y4mFile_t* y4mfile)
         {
         case COLOUR_C420JPEG:
             colourspace_string = "420jpeg";
+            break;
+        case COLOUR_C420MPEG2:
+            colourspace_string = "420mpeg2";
             break;
         case COLOUR_C420PALDV:
             colourspace_string = "420paldv";
