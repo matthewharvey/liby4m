@@ -48,6 +48,7 @@ enum interlacing_modes
 enum colour_spaces
 {
     COLOUR_C420JPEG,
+    COLOUR_C420MPEG2,
     COLOUR_C420PALDV,
     COLOUR_C420,
     COLOUR_C422,
